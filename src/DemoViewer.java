@@ -6,6 +6,7 @@ public class DemoViewer {
         JFrame frame = new JFrame();
         Container pane = frame.getContentPane();
         pane.setLayout(new BorderLayout());
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // stops execution of the program once the window is closed!
 
         // slide to control horizontal rotation
         JSlider headingSlider = new JSlider(0, 360, 180);
