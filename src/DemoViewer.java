@@ -26,7 +26,7 @@ public class DemoViewer {
                 g2.fillRect(0, 0, getWidth(), getHeight());
 
                 // Creating triangles
-                ArrayList<Triangle> tris = new ArrayList<Triangle>();
+                ArrayList<Triangle> tris = new ArrayList<>();
                 tris.add(new Triangle(new Vertex(100, 100, 100),
                         new Vertex(-100, -100, 100),
                         new Vertex(-100, 100, -100),
@@ -47,6 +47,7 @@ public class DemoViewer {
                 g2.translate(getWidth() / 2, getHeight() / 2);
                 g2.setColor(Color.YELLOW);
 
+                // drawing triangles
                 for (Triangle t : tris) {
                     Path2D path = new Path2D.Double();
                     path.moveTo(t.v1.x, t.v1.y);
@@ -55,8 +56,32 @@ public class DemoViewer {
                     path.closePath();
                     g2.draw(path);
                 }
+
+                // rotation
+                double heading = Math.toRadians(headingSlider.getValue());
+                Matrix3 transform = new Matrix3(new double[] {
+                    Math.cos(heading), 0, -Math.sin(heading),
+                    0, 1, 0,
+                    Math.sin(heading), 0, Math.cos(heading)
+                });
+
+                g2.translate(getWidth() / 2, getHeight() / 2);
+                g2.setColor(Color.YELLOW);
+                for(Triangle t : tris) {
+                    Vertex v1 = transform.transform(t.v1);
+                    Vertex v2 = transform.transform(t.v2);
+                    Vertex v3 = transform.transform(t.v3);
+                    Path2D path = new Path2D.Double();
+                    path.moveTo(v1.x, v1.y);
+                    path.lineTo(v2.x, v2.y);
+                    path.lineTo(v3.x, v3.y);
+                    path.closePath();
+                    g2.draw(path);
+                }
             }
         };
+        headingSlider.addChangeListener(e -> renderPanel.repaint());
+        pitchSlider.addChangeListener(e -> renderPanel.repaint());
         pane.add(renderPanel, BorderLayout.CENTER);
 
         frame.setSize(400, 400);
